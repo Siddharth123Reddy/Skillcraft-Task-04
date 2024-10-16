@@ -1,0 +1,149 @@
+//index.html
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To-Do List App</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>To-Do List</h1>
+        <input type="text" id="taskInput" placeholder="Add a new task...">
+        <input type="datetime-local" id="taskDate">
+        <button id="addTaskBtn">Add Task</button>
+        <ul id="taskList"></ul>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
+
+
+//styles.css
+
+/* styles.css */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 20px;
+}
+
+.container {
+    max-width: 600px;
+    margin: auto;
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+h1 {
+    text-align: center;
+}
+
+input[type="text"], input[type="datetime-local"] {
+    width: calc(100% - 22px);
+    padding: 10px;
+    margin: 10px 0;
+}
+
+button {
+    padding: 10px 15px;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #218838;
+}
+
+ul {
+    list-style: none;
+    padding: 0;
+}
+
+li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+}
+
+.completed {
+    text-decoration: line-through;
+    color: gray;
+}
+
+.edit {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+.edit:hover {
+    background-color: #0069d9;
+}
+
+.remove {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+.remove:hover {
+    background-color: #c82333;
+}
+
+//scripts.js
+
+// script.js
+document.getElementById('addTaskBtn').addEventListener('click', addTask);
+
+function addTask() {
+    const taskInput = document.getElementById('taskInput');
+    const taskDate = document.getElementById('taskDate');
+
+    if (taskInput.value.trim() === '') {
+        alert('Please enter a task');
+        return;
+    }
+
+    const taskList = document.getElementById('taskList');
+    const li = document.createElement('li');
+
+    li.innerHTML = `
+        <span>${taskInput.value} - ${taskDate.value}</span>
+        <button class="edit">Edit</button>
+        <button class="remove">Remove</button>
+    `;
+
+    taskList.appendChild(li);
+    taskInput.value = '';
+    taskDate.value = '';
+
+    li.querySelector('.remove').addEventListener('click', () => {
+        taskList.removeChild(li);
+    });
+
+    li.querySelector('.edit').addEventListener('click', () => {
+        const taskText = li.querySelector('span');
+        const newTask = prompt('Edit your task:', taskText.innerHTML);
+        if (newTask) {
+            taskText.innerHTML = newTask;
+        }
+    });
+
+    taskList.querySelectorAll('li').forEach(item => {
+        item.addEventListener('click', () => {
+            item.classList.toggle('completed');
+        });
+    });
+}
